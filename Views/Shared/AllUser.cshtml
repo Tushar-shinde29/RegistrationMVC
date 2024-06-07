@@ -1,0 +1,68 @@
+﻿@model IEnumerable<RegistrationMVC.Models.UserDetail>
+
+@{
+    ViewData["Title"] = "AllUser";
+}
+@{
+    var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
+    var qsPath = ViewContext.HttpContext.Request.QueryString.Value;
+    var returnUrl = $"{routeUrl}{qsPath}";
+    int prid = Convert.ToInt32(@ViewContext.HttpContext.Request.Query["permissionid"].ToString());
+}
+<head>
+<style> 
+    th{
+        text-align : center;
+    }    
+    td{
+            text-align: center;
+        }
+</style>
+</head>
+<body>
+<h1>AllUser</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>User Id</th>
+            <th>User Name</th>
+            <th>Role</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+                @if(prid==3 || prid == 8)
+                {
+                    <th colspan="2">Action</th>
+                }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.users)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Role</td>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                    
+                    @if(prid==3){
+
+                        <td><a asp-action="Delete" asp-route-id="@item.Id" asp-controller="DeleteUser" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">DELETE</a></td>
+                    }
+                    @if(prid==8)
+                    {
+                        
+                        <td><a href="/ChangePermission/?userid=@item.Id&roleid=@item.roleid" class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Edit Permission</a></td>
+                    }
+            </tr>
+        }
+    </tbody>
+
+</table>
+<script>
+    function check() {
+        console.log("asd");
+    }
+</script>
+
+</body>

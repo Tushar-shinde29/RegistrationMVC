@@ -1,0 +1,35 @@
+﻿@model IEnumerable<RegistrationMVC.Models.UserDetail>
+
+@{
+    ViewData["Title"] = "AllUser";
+}
+
+<h1>AllUser</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Mobile No</th>
+            <th>Email</th>
+            <th>City</th>
+            <th>State</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.users)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                <td>@item.Mobileno</td>
+                <td>@item.Email</td>
+                <td>@item.City</td>
+                <td>@item.State</td>
+            </tr>
+        }
+    </tbody>
+</table>

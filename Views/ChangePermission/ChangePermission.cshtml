@@ -1,0 +1,110 @@
+﻿
+<head>
+
+<style>
+    .permission {
+        display: flex;
+        flex-direction: row;
+        column-gap: 15px;
+        justify-content: center;
+        border : solid 1px;
+    }
+
+        .roleselect{
+            margin-top:5px;
+            display:none;
+        }
+</style>
+</head>
+<body>
+
+<div class="permission">
+    <div class="userpermission">
+        <h2>USER Permission</h2>
+            @if ((ViewBag.userpermission).Count < 1)
+            {
+                <p>user has no permission</p>
+            }
+            else
+            {
+                
+                @foreach (var item in ViewBag.userpermission)
+                {
+                    <p>@item.permissionId . @item.permissionName</p>
+                }
+            }
+    </div>
+    <div class="rolepermission">
+        <h2>Role Permission</h2>
+        
+
+
+            @foreach (var item in ViewBag.rolepermission)
+            {
+                <p>@item.permissionId . @item.permissionName</p>
+            }
+    </div>
+    <div class="availablepermission">
+        <h2>Total Permission</h2>
+        @foreach (var item in ViewBag.totalpermission)
+        {
+             <p>@item.permissionId . @item.permissionName</p>
+        }
+    </div>
+</div>
+
+<div class="assignPermission">
+    <h2 id="userid">Assign Permission To User</h2>
+
+        <select name="pr" id="apr" class="btn btn-dark dropdown-toggle">
+                @foreach (var item in ViewBag.totalpermission)
+                {
+                    @if (!(ViewBag.prid.Contains(item.permissionId)))
+                    {
+                        <option value="@item.permissionId ">@item.permissionName</option>
+                    } 
+                }
+            </select>
+        <button type="button" name="givepr" id="givepr" class="btn btn-primary"  onclick="givepr()">GIVE Permission</button>
+</div>
+
+    <div class="removePermission">
+        <h2 id="userid">Remove Permission To User</h2>
+
+        <select name="pr" id="removepr">
+            @foreach (var item in ViewBag.userpermission)
+            {
+                    <option value="@item.permissionId ">@item.permissionName</option>
+            }
+        </select>
+        <button type="button" name="givepr" id="givepr" class="btn btn-primary" onclick="removepr()">Remove Permission</button>
+    </div>
+ <script>
+     async function givepr(){
+           let url = new URLSearchParams(window.location.search);
+         let userid = url.get("userid");
+         let prid=document.getElementById("apr").value;
+         console.log(userid, prid);
+         const res = await fetch(`/ChangePermission/changepr/?userid=${userid}&prid=${prid}`);
+         const result = await res.json();
+         if(result==1){
+                alert("permisson Added");
+             window.location.reload();
+         }
+         console.log(result);
+     }
+        async function removepr() {
+            let url = new URLSearchParams(window.location.search);
+            let userid = url.get("userid");
+            let prid = document.getElementById("removepr").value;
+            console.log(userid, prid);
+            const res = await fetch(`/ChangePermission/removepr/?userid=${userid}&prid=${prid}`);
+            const result = await res.json();
+            if (result == 1) {
+                alert("permisson removed");
+                window.location.reload();
+            }
+            console.log(result);
+        }
+ </script>
+</body>

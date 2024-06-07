@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RegistrationMVC</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/RegistrationMVC.styles.css" asp-append-version="true" />
+</head>
+<body onload="setpr()">
+    <div class="sidenav" id="pr">
+        <a asp-controller="Home" asp-action="DashBoard" class="sidenava">Home</a>
+    </div>
+
+    <div class="content">
+
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = `/Login`;
+        }
+
+        async function setpr() {
+
+            if (localStorage.getItem("userid")) {
+
+                let userid=localStorage.getItem("userid");
+                let roleid = localStorage.getItem("roleid");
+                console.log(userid, roleid);
+                const result = await fetch(`/Home/GetPermission/?roleid=${roleid}&userid=${userid}`);
+                const pr = await result.json();
+                let s1 = document.createElement("style");
+                s1.innerHTML = `.sidenava {
+                        color: white;
+                        padding: 16px;
+                        text-decoration: none;
+                        display: block;
+                        }
+
+                        /* Change color on hover */
+                        .sidenava:hover {
+                            background-color: #ddd;
+                            color: black;
+                        }`
+                document.head.appendChild(s1);
+            
+
+                for (let i = 0; i < pr.length; i++) {
+                    
+                    let ac = document.createElement("a");
+                    ac.id = pr[i].permissionName;
+                    ac.classList.add("sidenava");
+                    document.getElementById(`pr`).appendChild(ac);
+                    document.getElementById(`${pr[i].permissionName}`).href = `/Permission/ExecutePermission/?permissionid=${pr[i].permissionId}`;
+                    document.getElementById(`${pr[i].permissionName}`).innerHTML = pr[i].permissionName;
+                }
+                let ac = document.createElement("a");
+                ac.id = "logout";
+                ac.classList.add("sidenava");
+                document.getElementById(`pr`).appendChild(ac);
+                ac.setAttribute("onclick", "logout()");
+                document.getElementById(`logout`).innerHTML = "LOGOUT";
+                }
+            else { 
+                window.location.href = `/Login`;
+            }
+        }
+
+    </script>
+</body>
+</html>
